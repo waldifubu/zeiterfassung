@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Projects list{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <h1>Project management</h1>
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Id</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Created</th>
+                    <th scope="col">actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for project in projects %}
+                    <tr>
+                        <td>{{ loop.index }}</td>
+                        <td>{{ project.id }}</td>
+                        <td>{{ project.name }}</td>
+                        <td>{{ project.created ? project.created|date('Y-m-d H:i:s') : '' }}</td>
+                        <td>
+                            <a class="btn btn-primary" href="{{ path('project_show', {'id': project.id}) }}">show</a>
+                            <a class="btn btn-secondary" href="{{ path('project_edit', {'id': project.id}) }}">edit</a>
+
+                            <span style="float: right">
+                            {{ include('project/_delete_form.html.twig') }}
+                            </span>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="4">no records found</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <a class="btn btn-success" href="{{ path('project_new') }}">Create new project</a>
+
+        <a class="btn btn-link" href="{{ path('timelog') }}">Back to Timelogger</a>
+    </div>
+{% endblock %}

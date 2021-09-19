@@ -1,0 +1,148 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Timelogs view{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <h1>Timelog view</h1>
+
+        <div class="accordion" id="accordionExample">
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingOne">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#collapseOne"
+                            aria-expanded="true" aria-controls="collapseOne">
+                        Filters
+                    </button>
+                </h2>
+
+                <div id="collapseOne" class="row accordion-collapse collapse" aria-labelledby="headingOne"
+                     data-bs-parent="#accordionExample">
+                    <div class="col-md-9">
+                    </div>
+                    <div class="col-md-3">
+                        {{ form_start(form) }}
+                        <label for="project_name" class="form-label"> {{ form_label(form.project) }}</label>
+                        {{ form_widget(form.project, {'attr': {'class': 'form-control' }}) }}
+
+                        <label for="project_name" class="form-label"> {{ form_label(form.datePreselect) }} <span class="text-warning">do not mix</span></label>
+                        {{ form_widget(form.datePreselect, {'attr': {'class': 'form-control' }}) }}
+
+                        <label for="project_name" class="form-label"> {{ form_label(form.dateGiven) }} <span class="text-warning">do not mix</span></label>
+                        {{ form_widget(form.dateGiven, {'attr': {'class': 'form-control' }}) }}
+
+                        {# Not used #}
+                        <label for="project_name" class="form-label"> Select only if more than XX hours</label>
+                        {{ form_widget(form.hours, {'attr': {'class': 'form-control', 'disabled':'disabled' }}) }}
+                        <br>
+                        {{ form_widget(form.submit) }}
+                        <p style="display: inline-block">
+                        {{ form_widget(form.download) }}
+                        </p>
+
+                        {{ form_end(form) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--
+                <div class="row">
+                    <div class="col">
+                        <b>Filters</b>
+                    </div>
+
+                    <div class="col">
+                        by timelog: <select>
+                            <option value="">Defualt</option>
+                        </select>
+                    </div>
+
+                    <div class="col">
+                        by date
+                        <select>
+                            <option>day</option>
+                            <option>yesterday</option>
+                            <option>5 days</option>
+                            <option>week</option>
+                            <option>2 weeks</option>
+                            <option>month</option>
+                        </select>
+                    </div>
+
+                    <div class="col">
+                        by given date <input size="7">
+                    </div>
+
+                    <div class="col">
+                        more than <input size="2"> hours
+                    </div>
+                </div>
+                <div class="col">
+                    <input type="submit">
+                </div>
+        -->
+
+        <div class="table-responsive mt-2">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Created</th>
+                    <th scope="col">Updated</th>
+                    <th scope="col">Project</th>
+                    <th scope="col">Begin</th>
+                    <th scope="col">End</th>
+                    <th scope="col">Comment</th>
+                    <th scope="col">Time</th>
+                    <th scope="col">Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for timelog in timelogs %}
+                    <tr>
+                        <td>{{ loop.index }}</td>
+                        <td>{{ timelog.created ? timelog.created|date('d.m.y H:i') : '' }}</td>
+                        <td>{{ timelog.updated ? timelog.updated|date('d.m.y H:i') : '' }}</td>
+                        <td>{{ timelog.project.name }}</td>
+                        <td>{{ timelog.start ? timelog.start|date('d.m.y H:i') : '' }}</td>
+                        <td>{{ timelog.end ? timelog.end|date('d.m.y H:i') : '' }}</td>
+                        <td>{{ timelog.comment }}</td>
+                        <td>{{ date_difference(timelog.start, timelog.end) }} </td>
+
+                        <td>
+                            <a class="btn btn-secondary" href="{{ path('timelog-edit', {'id': timelog.id}) }}">edit</a>
+                            <span style="float: right">
+                                {{ include('timelog/_delete_form.html.twig') }}
+                            </span>
+                        </td>
+                    </tr>
+
+                    {% if loop.last %}
+                        <tr>
+                            <td colspan="8"><span
+                                        class="badge rounded-pill bg-primary"> {{ loop.length }} Entries</span></td>
+                            <td><b>Total:</b> {{ sumTime }}</td>
+                        </tr>
+                    {% endif %}
+                {% else %}
+                    <tr>
+                        <td colspan="9">
+                            <div class="text-center text-danger">
+                            no records found
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <a href="{{ path('timelog-create') }}" class="btn btn-success"><i class="fas fa-plus"></i> New Entry</a>
+
+
+        <div class="text-center">
+            <a class="btn btn-link" href="{{ path('timelog') }}">Back to Timelogger overview</a>
+        </div>
+    </div>
+{% endblock %}

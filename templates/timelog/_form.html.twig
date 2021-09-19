@@ -1,0 +1,29 @@
+{{ form_start(form) }}
+<div class="my-custom-class-for-errors">
+    {{ form_errors(form) }}
+</div>
+
+<div class="mb-3">
+    <label for="project_name" class="form-label"> {{ form_label(form.start) }}</label>
+    {{ form_widget(form.start, {'attr': {'class': 'form-control'}}) }}
+</div>
+
+<div class="mb-3">
+    <label for="project_name" class="form-label"> {{ form_label(form.end) }}</label>
+    {{ form_widget(form.end, {'attr': {'class': 'form-control'}}) }}
+</div>
+
+<div class="mb-3">
+    <label for="project_name" class="form-label"> {{ form_label(form.comment) }}</label>
+    {{ form_widget(form.comment, {'attr': {'class': 'form-control', 'placeholder' : 'What have I done?' }}) }}
+</div>
+
+<div class="mb-3">
+    <label for="project_name" class="form-label"> {{ form_label(form.project) }}</label>
+    {{ form_widget(form.project, {'attr': {'class': 'form-control' }}) }}
+</div>
+
+<div class="mb-3">
+    {{ form_widget(form.save, {'label': button_label, 'attr': {'class': 'btn btn-primary mb-3'}}) }}
+</div>
+{{ form_end(form) }}

@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Create new Timelog!{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{ asset('css/bootstrap-datetimepicker.min.css') }}" rel="stylesheet">
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('js/jquery-1.8.3.min.js') }}"></script>
+    <script src="{{ asset('js/bootstrap-datetimepicker.min.js') }}"></script>
+    {#    <script type="text/javascript" src="{{ asset('js/locales/bootstrap-datetimepicker.de.js') }}" charset="UTF-8"></script>#}
+{% endblock %}
+
+
+{% block body %}
+    <div class="container">
+        <h1>Edit Timelog</h1>
+
+        {{ include('timelog/_form.html.twig', {'button_label': 'Update'}) }}
+
+        <a class="btn btn-primary" href="{{ path('timelog') }}"><i class="fa fa-chevron-left"
+                                                                   aria-hidden="true"></i> back to list</a>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            // you may need to change this code if you are not using Bootstrap Datepicker
+            $(".js-datepicker").datetimepicker({
+                autoclose: true,
+                todayBtn: true,
+                format: "yyyy-mm-dd hh:ii:ss",
+                pickerPosition: "top-left",
+                minuteStep: 5,
+                startDate: "{{ "now"|date('Y-m-d h:i:s') }}"
+            });
+        });
+    </script>
+{% endblock %}

@@ -1,0 +1,192 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello TimelogController!{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('js/jquery-1.8.3.min.js') }}"></script>
+    <script src="{{ asset('js/timer.jquery.min.js') }}"></script>
+{% endblock %}
+
+{% block body %}
+    <style>
+        .example-wrapper {
+            margin: 1em auto;
+            max-width: 800px;
+            width: 95%;
+            font: 18px/1.5 sans-serif;
+        }
+
+        .example-wrapper code {
+            background: #F5F5F5;
+            padding: 2px 6px;
+        }
+    </style>
+
+    <div class="container">
+
+        <h1><img src="{{ asset('img/timelog.png') }}" style="width: 200px">
+            Hello to Timelogger</h1>
+
+        <div class="row">
+            <div class="col-md-3">
+                <div class="card rounded-4 shadow-sm py-3">
+                    <div class="class-header text-center"><i class="fas fa-user-clock fa-5x"></i></div>
+                    <div class="card-body">
+                        <h5 class="card-title">Create new timelog</h5>
+                        <p class="card-text">for create new entries</p>
+                        <a href="{{ path('timelog-create') }}" class="btn btn-success">NEW <i
+                                    class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="card rounded-4 shadow-sm py-3">
+                    <div class="class-header text-center"><i class="fas fa-project-diagram fa-5x"></i></div>
+                    <div class="card-body">
+                        <h5 class="card-title">Create new poject</h5>
+                        <p class="card-text">for create new project</p>
+                        <a href="{{ path('project_index') }}" class="btn btn-success">NEW <i
+                                    class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="card rounded-4 shadow-sm py-3">
+                    <div class="class-header text-center"><i class="fas fa-list fa-5x"></i></div>
+                    <div class="card-body">
+                        <h5 class="card-title">List all timelog entries</h5>
+                        <p class="card-text">for create new entries</p>
+                        <a href="{{ path('timelog_list') }}" class="btn btn-primary">Go somewhere</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="card rounded-4 shadow-sm py-3">
+                    <div class="class-header text-center"><i class="fas fa-chart-bar fa-5x"></i></div>
+                    <div class="card-body">
+                        <h5 class="card-title">Statistics</h5>
+                        <p class="card-text">for create new entries</p>
+                        <a href="{{ path('timelog_statistics') }}" class="btn btn-primary">Go somewhere</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mt-4 rounded-3 shadow-sm">
+            <div class="card-header py-3">
+                <h4 class="my-0 fw-normal">Stopwatch</h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-2">
+                        <label for="start-time">Start time:</label>
+                        <input type="text" id="start-time" class="form-control">
+                    </div>
+                    <div class="col-md-2">
+                        <label for="end-time">End time:</label>
+                        <input type="text" id="end-time" class="form-control">
+                    </div>
+                    <div class="col-md-2">
+                        <br><label>
+                            <input type="text" name="timer" class="form-control timer" placeholder="0 sec">
+                        </label>
+                    </div>
+                    <div class="col-md-6">
+                        <br>
+                        <button class="btn btn-success start-timer-btn hidden" title="Start"><i class="fas fa-play"></i>
+                        </button>
+                        <button class="btn btn-success resume-timer-btn d-none">Resume</button>
+                        <button class="btn btn-outline-dark pause-timer-btn" title="Pause"><i class="fas fa-pause"></i>
+                        </button>
+                        <button class="btn btn-danger remove-timer-btn" title="Stop Timer"><i class="fas fa-stop"></i>
+                        </button>
+                    </div>
+                </div>
+                {# <button type="button" class="w-100 btn btn-lg btn-outline-primary">Sign up for free</button> #}
+            </div>
+        </div>
+
+        <div class="mt-3 text-center" id="timelog-link"></div>
+
+        <script>
+            let startTime;
+            let endTime;
+            $(document).ready(function () {
+                let hasTimer = false;
+                // Init timer start
+                $('.start-timer-btn').on('click', function () {
+                    hasTimer = true;
+
+                    startTime = new Date()
+                    $('#start-time').val(zeroFill(startTime.getHours()) + ":" + zeroFill(startTime.getMinutes()))
+
+                    $('.timer').timer({
+                        editable: false
+                    });
+                    $(this).addClass('d-none');
+                    $('.pause-timer-btn, .remove-timer-btn').removeClass('d-none');
+                });
+
+                // Init timer resume
+                $('.resume-timer-btn').on('click', function () {
+                    $('.timer').timer('resume');
+                    $(this).addClass('d-none');
+                    $('.pause-timer-btn, .remove-timer-btn').removeClass('d-none').removeClass('animate__heartBeat')
+                });
+
+                // Init timer pause
+                $('.pause-timer-btn').on('click', function () {
+                    $('.timer').timer('pause');
+                    $(this).addClass('d-none');
+                    $('.resume-timer-btn').removeClass('d-none');
+                    $('.resume-timer-btn').addClass('animate__heartBeat');
+                });
+
+                // Remove timer
+                $('.remove-timer-btn').on('click', function () {
+                    endTime = new Date()
+                    $('#end-time').val(zeroFill(endTime.getHours()) + ":" + zeroFill(endTime.getMinutes()))
+
+                    $('#timelog-link').empty()
+                    $(buildLink()).appendTo($('#timelog-link'))
+                    $('#timelog-link').removeClass('animate__heartBeat')
+                    $('#timelog-link').addClass('animate__heartBeat')
+
+                    hasTimer = false;
+                    $('.timer').timer('remove')
+                    $(this).addClass('d-none')
+                    $('.start-timer-btn').removeClass('d-none');
+                    $('.pause-timer-btn, .resume-timer-btn').addClass('d-none');
+                });
+
+                // Additional focus event for this demo
+                $('.timer').on('focus', function () {
+                    if (hasTimer) {
+                        $('.pause-timer-btn').addClass('d-none');
+                        $('.resume-timer-btn').removeClass('d-none');
+                    }
+                });
+
+                // Additional blur event for this demo
+                $('.timer').on('blur', function () {
+                    if (hasTimer) {
+                        $('.pause-timer-btn').removeClass('d-none');
+                        $('.resume-timer-btn').addClass('d-none');
+                    }
+                });
+            });
+
+            function zeroFill(i) {
+                return (i < 10 ? '0' : '') + i
+            }
+
+            function buildLink() {
+                return '<a class=\'btn btn-outline-dark\' href=\'{{ path('timelog-create') }}' + '?startTime=' + startTime.getTime() + '&endTime=' + endTime.getTime() + '\'>Create new entry with this time</a>'
+            }
+        </script>
+    </div>
+{% endblock %}

@@ -1,0 +1,71 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Timelogs statistics{% endblock %}
+
+{% block javascripts %}
+    <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+{% endblock %}
+
+{% block body %}
+    <h1>Statistics</h1>
+
+    <div class="container text-center">
+        <div class="btn-group" role="group" aria-label="Basic checkbox toggle button group">
+            <div class="btn btn-link">none</div>
+            <a class="btn btn-outline-primary" href="{{ path('timelog_statistics') }}?diagram=today">Today</a>
+            <a class="btn btn-outline-primary" href="{{ path('timelog_statistics') }}?diagram=week">This week</a>
+            <a class="btn btn-outline-primary" href="{{ path('timelog_statistics') }}?diagram=month">This month</a>
+        </div>
+
+        {% for project in projects %}
+        <div class="btn-group text-center" role="group" aria-label="Basic checkbox toggle button group">
+            <div class="btn btn-link">{{ project.name }}</div>
+            <a class="btn btn-outline-primary" href="{{ path('timelog_statistics') }}?diagram=today&project={{ project.id }}">Today1</a>
+            <a class="btn btn-outline-primary" href="{{ path('timelog_statistics') }}?diagram=week&project={{ project.id }}">This week</a>
+            <a class="btn btn-outline-primary" href="{{ path('timelog_statistics') }}?diagram=month&project={{ project.id }}">This month</a>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="mt-5" id="chartContainer" style="height: 570px; width: 98%;">
+    </div>
+
+    <div class="text-center">
+        <a class="btn btn-link" href="{{ path('timelog') }}">Back to Timelogger overview</a>
+    </div>
+    <script>
+        window.onload = function () {
+
+            const chart = new CanvasJS.Chart("chartContainer", {
+                animationEnabled: true,
+                theme: "light2",
+                title: {
+                    text: "Working time analysis"
+                },
+                subtitles: [{
+                    text: "{{ subheadline }}"
+                }],
+                axisX: {
+                    interval: 1,
+                    tickLength: 15
+                },
+                axisY: {
+                    title: "Minutes of work",
+                    tickLength: 15
+                },
+                data: [{
+                    type: "column",
+                    dataPoints: {{ dataPoints|raw }}
+                }]
+            });
+            chart.render();
+
+        }
+    </script>
+
+    <style>
+        li {
+            width: 20%
+        }
+    </style>
+{% endblock %}
