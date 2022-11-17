@@ -5,49 +5,33 @@ namespace App\Entity;
 use App\Repository\TimelogRepository;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity(repositoryClass=TimelogRepository::class)
- * @ORM\HasLifecycleCallbacks
- */
+#[ORM\Entity(repositoryClass: TimelogRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Timelog
 {
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
-    private $id;
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
+    private ?int $id;
 
-    /**
-     * @ORM\Column(type="datetime")
-     */
-    private $start;
+    #[ORM\Column(type: 'datetime')]
+    private ?\DateTimeInterface $start;
 
-    /**
-     * @ORM\Column(type="datetime")
-     */
-    private $end;
+    #[ORM\Column(type: 'datetime')]
+    private ?\DateTimeInterface $end;
 
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $comment;
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private ?string $comment;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=Project::class, inversedBy="timelogs")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $project;
+    #[ORM\ManyToOne(targetEntity: Project::class, inversedBy: 'timelogs')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Project $project;
 
-    /**
-     * @ORM\Column(type="datetime")
-     */
-    private $created;
+    #[ORM\Column(type: 'datetime')]
+    private ?\DateTimeInterface $created;
 
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
-    private $updated;
+    #[ORM\Column(type: 'datetime', nullable: true)]
+    private ?\DateTimeInterface $updated;
 
     public function getId(): ?int
     {
@@ -95,7 +79,7 @@ class Timelog
         return $this->project;
     }
 
-    public function setProject(Project $project): self
+    public function setProject(?Project $project): self
     {
         $this->project = $project;
 
@@ -104,10 +88,9 @@ class Timelog
 
     /**
      * Gets triggered only on insert
-
-     * @ORM\PrePersist
      */
-    public function onPrePersist()
+    #[ORM\PrePersist]
+    public function onPrePersist(): void
     {
         $this->created = new \DateTime("now");
     }
@@ -138,10 +121,9 @@ class Timelog
 
     /**
      * Gets triggered every time on update
-
-     * @ORM\PreUpdate
      */
-    public function onPreUpdate()
+    #[ORM\PreUpdate]
+    public function onPreUpdate(): void
     {
         $this->updated = new \DateTime("now");
     }

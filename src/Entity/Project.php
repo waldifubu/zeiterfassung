@@ -8,34 +8,25 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
-/**
- * @ORM\Entity(repositoryClass=ProjectRepository::class)
- * @UniqueEntity(fields="name", message="Name is already taken.")
- * @ORM\HasLifecycleCallbacks
- */
+#[ORM\Table(name: 'projects')]
+#[ORM\Entity(repositoryClass: ProjectRepository::class)]
+#[UniqueEntity(fields: 'name', message: 'Name is already taken.')]
+#[ORM\HasLifecycleCallbacks]
 class Project
 {
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
-    private $id;
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
+    private ?int $id;
 
-    /**
-     * @ORM\Column(type="string", length=100, unique=true)
-     */
-    private $name;
+    #[ORM\Column(type: 'string', length: 100, unique: true)]
+    private ?string $name;
 
-    /**
-     * @ORM\Column(type="datetime")
-     */
-    private $created;
+    #[ORM\Column(type: 'datetime')]
+    private ?\DateTimeInterface $created;
 
-    /**
-     * @ORM\OneToMany(targetEntity=Timelog::class, mappedBy="project", orphanRemoval=true)
-     */
-    private $timelogs;
+    #[ORM\OneToMany(mappedBy: 'project', targetEntity: Timelog::class, orphanRemoval: true)]
+    private Collection $timelogs;
 
     public function __construct()
     {
@@ -72,7 +63,7 @@ class Project
     }
 
     /**
-     * @return Collection|Timelog[]
+     * @return Collection
      */
     public function getTimelogs(): Collection
     {
@@ -91,11 +82,9 @@ class Project
 
     public function removeTimelog(Timelog $timelog): self
     {
-        if ($this->timelogs->removeElement($timelog)) {
-            // set the owning side to null (unless already changed)
-            if ($timelog->getProject() === $this) {
-                $timelog->setProject(null);
-            }
+        // set the owning side to null (unless already changed)
+        if ($this->timelogs->removeElement($timelog) && $timelog->getProject() === $this) {
+            $timelog->setProject(null);
         }
 
         return $this;
@@ -103,11 +92,10 @@ class Project
 
     /**
      * Gets triggered only on insert
-
-     * @ORM\PrePersist
      */
-    public function onPrePersist()
+    #[ORM\PrePersist]
+    public function onPrePersist(): void
     {
-        $this->created = new \DateTime("now");
+        $this->created = new \DateTime();
     }
 }

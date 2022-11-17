@@ -49,7 +49,8 @@ class TimelogType extends AbstractType
                 'choice_label' => function(Project $project) {
                     return sprintf('(%d) %s', $project->getId(), $project->getName());
                 },
-                'placeholder' => 'Please select a project'
+                'placeholder' => 'Please select a project',
+                'required' => true
             ])
             ->add('save', SubmitType::class)
         ;

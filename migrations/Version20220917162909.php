@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20210919213855 extends AbstractMigration
+final class Version20220917162909 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -20,12 +20,12 @@ final class Version20210919213855 extends AbstractMigration
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->addSql('CREATE UNIQUE INDEX UNIQ_2FB3D0EE5E237E06 ON projects (name)');
+        $this->addSql('ALTER TABLE project ADD slug VARCHAR(255) DEFAULT NULL, ADD uuid BINARY(16) DEFAULT NULL COMMENT \'(DC2Type:uuid)\'');
     }
 
     public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs
-        $this->addSql('DROP INDEX UNIQ_2FB3D0EE5E237E06 ON projects');
+        $this->addSql('ALTER TABLE project DROP slug, DROP uuid');
     }
 }

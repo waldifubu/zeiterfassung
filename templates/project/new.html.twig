@@ -5,6 +5,11 @@
 {% block body %}
     <div class="container">
         <h1>Create new project</h1>
+        {% for notice in app.flashes('notice') %}
+            <div class="alert alert-dark" role="alert">
+                {{ notice }}
+            </div>
+        {% endfor %}
 
         {{ include('project/_form.html.twig', {'button_label': 'Create'}) }}
 

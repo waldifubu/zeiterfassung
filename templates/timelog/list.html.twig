@@ -32,7 +32,7 @@
                         {{ form_widget(form.dateGiven, {'attr': {'class': 'form-control' }}) }}
 
                         {# Not used #}
-                        <label for="project_name" class="form-label"> Select only if more than XX hours</label>
+                        <label for="project_name" class="form-label"> Select only entries, who have more than XX hours</label>
                         {{ form_widget(form.hours, {'attr': {'class': 'form-control', 'disabled':'disabled' }}) }}
                         <br>
                         {{ form_widget(form.submit) }}
@@ -45,43 +45,6 @@
                 </div>
             </div>
         </div>
-
-        <!--
-                <div class="row">
-                    <div class="col">
-                        <b>Filters</b>
-                    </div>
-
-                    <div class="col">
-                        by timelog: <select>
-                            <option value="">Defualt</option>
-                        </select>
-                    </div>
-
-                    <div class="col">
-                        by date
-                        <select>
-                            <option>day</option>
-                            <option>yesterday</option>
-                            <option>5 days</option>
-                            <option>week</option>
-                            <option>2 weeks</option>
-                            <option>month</option>
-                        </select>
-                    </div>
-
-                    <div class="col">
-                        by given date <input size="7">
-                    </div>
-
-                    <div class="col">
-                        more than <input size="2"> hours
-                    </div>
-                </div>
-                <div class="col">
-                    <input type="submit">
-                </div>
-        -->
 
         <div class="table-responsive mt-2">
             <table class="table table-striped">

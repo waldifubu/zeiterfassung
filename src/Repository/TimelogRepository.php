@@ -88,7 +88,7 @@ class TimelogRepository extends ServiceEntityRepository
                 case 'today':
                     $today = new \DateTime('0:0');
                     $qb->andWhere('DATE(t.start) = :today')
-                        ->setParameter('yesterday', $today);
+                        ->setParameter('today', $today);
                     break;
                 case 'yesterday':
                     $yesterday = new \DateTime('-1 days 0:0');
@@ -114,19 +114,11 @@ class TimelogRepository extends ServiceEntityRepository
 
         $qb->orderBy('t.start');
 
-        return $qb->getQuery()
-            ->getResult();
+        return $qb->getQuery()->getResult();
     }
 
     public function findByRange($startRange, $endRange, $project = null)
     {
-        //$startRange, $endRange
-//        switch ($calc) {
-//            case 'today':
-//                $startRange = new \DateTime('0:0');
-//                $endRange = new \DateTime('23:59:59');
-//        }
-
         $qb = $this->createQueryBuilder('t');
 
         if ($project !== null) {

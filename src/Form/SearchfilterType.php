@@ -3,16 +3,15 @@
 namespace App\Form;
 
 use App\Entity\Project;
-use App\Entity\Timelog;
 use App\Repository\ProjectRepository;
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class SearchfilterType extends AbstractType
 {
@@ -22,17 +21,12 @@ class SearchfilterType extends AbstractType
         '3 days ago' => '3days',
         '5 days ago' => '5days',
         'this week' => 'week',
-        '2 weeks' => '2weeks',
-        'month' => 'month',
+        '2 weeks ago' => '2weeks',
+        'current month' => 'month',
     ];
-    /**
-     * @var ProjectRepository
-     */
-    private $projectRepository;
 
-    public function __construct(ProjectRepository $projectRepository)
+    public function __construct(private readonly ProjectRepository $projectRepository)
     {
-        $this->projectRepository = $projectRepository;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -48,8 +42,8 @@ class SearchfilterType extends AbstractType
             add('project', EntityType::class, [
                 'class' => Project::class,
                 'choices' => $this->projectRepository->findAllProjectsAlphabetical(),
-                'choice_label' => function (Project $user) {
-                    return sprintf('%s', $user->getName());
+                'choice_label' => function (Project $project) {
+                    return sprintf('%s', $project->getName());
                 },
                 'placeholder' => 'Please choose a project',
                 'required' => false,
@@ -62,17 +56,21 @@ class SearchfilterType extends AbstractType
                 'required' => false,
             ])
             ->add('submit', SubmitType::class, [
-                'label' => 'Filter'
+                'label' => '<i class="fas fa-filter"> Filter</i>',
+                'attr' => ['class' => 'btn btn-outline-success'],
+                'label_html' => true,
             ])
             ->add('download', SubmitType::class, [
-                'label' => 'Download'
+                'label' => '<i class="fas fa-download"> Download</i>',
+                'attr' => ['class' => 'btn btn-outline-primary'],
+                'label_html' => true,
             ]);
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
 
-                               ]);
+        ]);
     }
 }
