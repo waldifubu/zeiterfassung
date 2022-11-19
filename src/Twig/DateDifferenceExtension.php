@@ -28,15 +28,16 @@ class DateDifferenceExtension extends AbstractExtension
     /**
      * @param $start
      * @param $end
+     *
      * @return string
      */
-    public function dateDifference($start, $end)
+    public function dateDifference($start, $end): string
     {
         if ($start instanceof \DateTimeInterface && $end instanceof \DateTimeInterface) {
             $diff = $end->diff($start);
             $days = $diff->d;
 
-            return ($days > 0 ? $days . ' d ' : '') . $diff->format('%H:%I:%S');
+            return ($days > 0 ? $days.' d ' : '').$diff->format('%H:%I:%S');
         }
 
         return '-';

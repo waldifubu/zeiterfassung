@@ -12,6 +12,8 @@ use App\Service\MyDateInterval;
 use App\Twig\DateDifferenceExtension;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
+use JetBrains\PhpStorm\NoReturn;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,19 +21,15 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class TimelogController extends AbstractController
 {
-
     public const TODAY = 'today';
     public const WEEK = 'week';
     public const MONTH = 'month';
 
-    private TimelogRepository $timelogRepository;
-
-    public function __construct(TimelogRepository $timelogRepository)
+    public function __construct(private readonly TimelogRepository $timelogRepository)
     {
-        $this->timelogRepository = $timelogRepository;
     }
 
-    #[Route(path: '/', name: 'timelog')]
+    #[Route('/', name: 'timelog')]
     public function index(): Response
     {
         return $this->render('timelog/overview.html.twig', [
@@ -39,7 +37,7 @@ class TimelogController extends AbstractController
         ]);
     }
 
-    #[Route(path: '/create', name: 'timelog-create', methods: ['GET', 'POST'])]
+    #[Route('/create', name: 'timelog-create', methods: ['GET', 'POST'])]
     public function create(
         Request $request,
         ProjectRepository $projectRepository,
@@ -81,9 +79,9 @@ class TimelogController extends AbstractController
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
-    #[Route(path: '/list', name: 'timelog_list', methods: ['GET', 'POST'])]
+    #[Route('/list', name: 'timelog_list', methods: ['GET', 'POST'])]
     public function list(Request $request, TimelogRepository $timelogRepository): Response
     {
         $form = $this->createForm(SearchfilterType::class);
@@ -113,13 +111,13 @@ class TimelogController extends AbstractController
      * @param array $queryParams
      * @return Timelog[]|int|mixed|string
      */
-    private function queryAnalyzer(array $queryParams)
+    private function queryAnalyzer(array $queryParams): mixed
     {
         return $this->timelogRepository->findByCriteria($queryParams);
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     private function calcWorkingTime(array $timelogs): string
     {
@@ -154,9 +152,9 @@ class TimelogController extends AbstractController
 
         foreach ($timelogs as $timelog) {
             $csvList[] = [
-                $timelog->getProject()->getName(),
-                $timelog->getStart()->format('d.m.Y H:i:s'),
-                $timelog->getEnd()->format('d.m.Y H:i:s'),
+                $timelog->getProject()?->getName(),
+                $timelog->getStart()?->format('d.m.Y H:i:s'),
+                $timelog->getEnd()?->format('d.m.Y H:i:s'),
                 $timelog->getComment(),
                 $dateDiffer->dateDifference($timelog->getStart(), $timelog->getEnd()),
             ];
@@ -180,11 +178,12 @@ class TimelogController extends AbstractController
      * @param string $filename
      * @param string $delimiter
      */
+    #[NoReturn]
     private function arrayToCsvDownload(
         $array,
         $filename = "export.csv",
         $delimiter = ";"
-    ) {
+    ): void {
         header('Content-Type: application/csv');
         header('Content-Disposition: attachment; filename="'.$filename.'";');
 
@@ -198,7 +197,7 @@ class TimelogController extends AbstractController
         exit;
     }
 
-    #[Route(path: '/edit/{id}', name: 'timelog-edit', methods: ['GET', 'POST'])]
+    #[Route('/edit/{id}', name: 'timelog-edit', methods: ['GET', 'POST'])]
     public function editTimelog(Request $request, Timelog $timelog, EntityManagerInterface $entityManager): Response
     {
         $form = $this->createForm(TimelogType::class, $timelog);
@@ -218,13 +217,13 @@ class TimelogController extends AbstractController
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
-    #[Route(path: '/statistics', name: 'timelog_statistics', methods: ['GET', 'POST'])]
+    #[Route('/statistics', name: 'timelog_statistics', methods: ['GET', 'POST'])]
     public function statistics(
         Request $request,
         ProjectRepository $projectRepository
-    ) {
+    ): Response {
         $calc = self::TODAY;
         $project = null;
         $subheadline = '';
@@ -269,11 +268,11 @@ class TimelogController extends AbstractController
 
     /**
      * @param string $calc
-     * @param Project $project
-     * @return Timelog[]
-     * @throws \Exception
+     * @param Project|null $project
+     * @return array
+     * @throws Exception
      */
-    private function calculateDiagram(string $calc, Project $project = null)
+    private function calculateDiagram(string $calc, Project $project = null): array
     {
         $dataPoints = [];
 
@@ -341,7 +340,7 @@ class TimelogController extends AbstractController
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     private function calcWorkingInterval(array $timelogs): MyDateInterval
     {
@@ -357,9 +356,8 @@ class TimelogController extends AbstractController
         return $mydateInterval;
     }
 
-    #[Route(path: '/{id}', name: 'timelog-delete', methods: ['POST'])]
-    public
-    function deleteTimelog(
+    #[Route('/{id}', name: 'timelog-delete', methods: ['POST'])]
+    public function deleteTimelog(
         Request $request,
         Timelog $timelog,
         EntityManagerInterface $entityManager

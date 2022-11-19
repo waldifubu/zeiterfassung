@@ -32,14 +32,7 @@ class SearchfilterType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('datePreselect', ChoiceType::class, [
-                'placeholder' => 'Please choose a date range',
-                'attr' => ['class' => 'form-control'],
-                'choices' => self::CHOICES,
-                'required' => false,
-            ])
-            ->
-            add('project', EntityType::class, [
+            ->add('project', EntityType::class, [
                 'class' => Project::class,
                 'choices' => $this->projectRepository->findAllProjectsAlphabetical(),
                 'choice_label' => function (Project $project) {
@@ -48,8 +41,16 @@ class SearchfilterType extends AbstractType
                 'placeholder' => 'Please choose a project',
                 'required' => false,
             ])
+            ->add('datePreselect', ChoiceType::class, [
+                'label' => 'Date range',
+                'placeholder' => 'Please choose a date range',
+                'attr' => ['class' => 'form-control'],
+                'choices' => self::CHOICES,
+                'required' => false,
+            ])
             ->add('dateGiven', DateType::class, [
                 'widget' => 'single_text',
+                'label' => 'Date given',
                 'required' => false,
             ])
             ->add('hours', NumberType::class, [

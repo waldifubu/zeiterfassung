@@ -11,7 +11,7 @@
     {{ parent() }}
     <script src="{{ asset('js/jquery-1.8.3.min.js') }}"></script>
     <script src="{{ asset('js/bootstrap-datetimepicker.min.js') }}"></script>
-{#    <script type="text/javascript" src="{{ asset('js/locales/bootstrap-datetimepicker.de.js') }}" charset="UTF-8"></script>#}
+    {#    <script type="text/javascript" src="{{ asset('js/locales/bootstrap-datetimepicker.de.js') }}" charset="UTF-8"></script> #}
 {% endblock %}
 
 
@@ -25,8 +25,9 @@
 
         {{ include('timelog/_form.html.twig', {'button_label': 'Create'}) }}
 
-        <a class="btn btn-primary" href="{{ path('timelog') }}"><i class="fa fa-chevron-left"
-                                                                   aria-hidden="true"></i> back to list</a>
+        <a class="btn btn-primary" href="{{ path('timelog') }}">
+            <i class="fa fa-chevron-left" aria-hidden="true"></i> back to list
+        </a>
     </div>
 
     <script>

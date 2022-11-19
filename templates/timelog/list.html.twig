@@ -9,35 +9,37 @@
         <div class="accordion" id="accordionExample">
             <div class="accordion-item">
                 <h2 class="accordion-header" id="headingOne">
-                    <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                             data-bs-target="#collapseOne"
-                            aria-expanded="true" aria-controls="collapseOne">
+                            aria-expanded="true" aria-controls="collapseOne" style="color: #0c63e4;background-color: #e7f1ff">
                         Filters
                     </button>
                 </h2>
 
                 <div id="collapseOne" class="row accordion-collapse collapse" aria-labelledby="headingOne"
                      data-bs-parent="#accordionExample">
-                    <div class="col-md-9">
-                    </div>
-                    <div class="col-md-3">
+
+                    <div class="col-md-3 offset-md-9">
                         {{ form_start(form) }}
-                        <label for="project_name" class="form-label"> {{ form_label(form.project) }}</label>
-                        {{ form_widget(form.project, {'attr': {'class': 'form-control' }}) }}
+                        {{ form_label(form.project, null, {'label_attr': {'class': 'form-label pb-0' }}) }}
+                        {{ form_widget(form.project, {'attr': {'class': 'form-control mb-2' }}) }}
 
-                        <label for="project_name" class="form-label"> {{ form_label(form.datePreselect) }} <span class="text-warning">do not mix</span></label>
-                        {{ form_widget(form.datePreselect, {'attr': {'class': 'form-control' }}) }}
+                        <label for="project_name" class="form-label mb-0"> {{ form.datePreselect.vars.label }} (<span
+                                    class="text-warning">do not mix</span>)</label>
+                        {{ form_widget(form.datePreselect, {'attr': {'class': 'form-control mb-2' }}) }}
 
-                        <label for="project_name" class="form-label"> {{ form_label(form.dateGiven) }} <span class="text-warning">do not mix</span></label>
-                        {{ form_widget(form.dateGiven, {'attr': {'class': 'form-control' }}) }}
+                        <label for="project_name" class="form-label mb-0"> {{ form.dateGiven.vars.label }} (<span
+                                    class="text-warning">do not mix</span>)</label>
+                        {{ form_widget(form.dateGiven, {'attr': {'class': 'form-control mb-2' }}) }}
 
                         {# Not used #}
-                        <label for="project_name" class="form-label"> Select only entries, who have more than XX hours</label>
+                        <label for="project_name" class="form-label mb-0"> Select only entries, who have more than XX
+                            hours</label>
                         {{ form_widget(form.hours, {'attr': {'class': 'form-control', 'disabled':'disabled' }}) }}
                         <br>
                         {{ form_widget(form.submit) }}
                         <p style="display: inline-block">
-                        {{ form_widget(form.download) }}
+                            {{ form_widget(form.download) }}
                         </p>
 
                         {{ form_end(form) }}
@@ -92,7 +94,7 @@
                     <tr>
                         <td colspan="9">
                             <div class="text-center text-danger">
-                            no records found
+                                no records found
                             </div>
                         </td>
                     </tr>
