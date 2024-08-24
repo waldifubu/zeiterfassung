@@ -13,8 +13,6 @@ class DefaultFixtures extends Fixture
         $project = new Project();
         $project->setName('Default');
         $manager->persist($project);
-        // $product = new Product();
-        // $manager->persist($product);
 
         $manager->flush();
     }

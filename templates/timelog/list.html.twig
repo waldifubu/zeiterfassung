@@ -11,7 +11,8 @@
                 <h2 class="accordion-header" id="headingOne">
                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                             data-bs-target="#collapseOne"
-                            aria-expanded="true" aria-controls="collapseOne" style="color: #0c63e4;background-color: #e7f1ff">
+                            aria-expanded="true" aria-controls="collapseOne"
+                            style="color: #0c63e4;background-color: #e7f1ff">
                         Filters
                     </button>
                 </h2>
@@ -32,10 +33,17 @@
                                     class="text-warning">do not mix</span>)</label>
                         {{ form_widget(form.dateGiven, {'attr': {'class': 'form-control mb-2' }}) }}
 
-                        {# Not used #}
-                        <label for="project_name" class="form-label mb-0"> Select only entries, who have more than XX
-                            hours</label>
-                        {{ form_widget(form.hours, {'attr': {'class': 'form-control', 'disabled':'disabled' }}) }}
+
+                        <div class="row">
+                            <div class="col">
+                                <label for="project_name" class="form-label mb-0"> Select only entries, who have more
+                                    than X hours</label>
+                            </div>
+                            <div class="col">
+                                {{ form_widget(form.hours, {'attr': { 'disabled':'disabled' }}) }}
+                            </div>
+                        </div>
+
                         <br>
                         {{ form_widget(form.submit) }}
                         <p style="display: inline-block">
@@ -49,7 +57,7 @@
         </div>
 
         <div class="table-responsive mt-2">
-            <table class="table table-striped">
+            <table class="table table-hover">
                 <thead>
                 <tr>
                     <th scope="col">#</th>

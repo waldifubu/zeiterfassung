@@ -27,8 +27,7 @@ class ProjectRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('u')
             ->orderBy('u.name', 'ASC')
             ->getQuery()
-            ->execute()
-            ;
+            ->execute();
     }
 
 

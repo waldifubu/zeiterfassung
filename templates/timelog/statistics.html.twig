@@ -10,22 +10,24 @@
     <h1>Statistics</h1>
 
     <div class="container text-center">
-        <div class="btn btn-link">none</div>
+        <a class="btn btn-link" title="Reset filters" href="{{ path('timelog_statistics') }}">none</a>
         <div class="btn-group" role="group" aria-label="Basic checkbox toggle button group">
-            <a class="btn btn-outline-primary" href="{{ path('timelog_statistics') }}?diagram=today">Today</a>
-            <a class="btn btn-outline-primary" href="{{ path('timelog_statistics') }}?diagram=week">This week</a>
-            <a class="btn btn-outline-primary" href="{{ path('timelog_statistics') }}?diagram=month">This month</a>
+            <a class="btn btn-outline-primary" href="{{ path('timelog_statistics', {'diagram' : 'today'}) }}">Today</a>
+            <a class="btn btn-outline-primary" href="{{ path('timelog_statistics', {'diagram': 'week'}) }}">
+                This week</a>
+            <a class="btn btn-outline-primary" href="{{ path('timelog_statistics', {'diagram': 'month'}) }}">
+                This month</a>
         </div>
 
         {% for project in projects %}
             <div class="btn btn-link" style="text-decoration: none;cursor: inherit">{{ project.name }}</div>
             <div class="btn-group text-center" role="group" aria-label="Basic checkbox toggle button group">
                 <a class="btn btn-outline-primary"
-                   href="{{ path('timelog_statistics') }}?diagram=today&project={{ project.id }}">Today</a>
+                   href="{{ path('timelog_statistics', {'projectId': project.id, 'digram': 'today'}) }}">Today</a>
                 <a class="btn btn-outline-primary"
-                   href="{{ path('timelog_statistics') }}?diagram=week&project={{ project.id }}">This week</a>
+                   href="{{ path('timelog_statistics', {'projectId': project.id, 'digram': 'week'}) }}">This week</a>
                 <a class="btn btn-outline-primary"
-                   href="{{ path('timelog_statistics') }}?diagram=month&project={{ project.id }}">This month</a>
+                   href="{{ path('timelog_statistics', {'projectId': project.id, 'diagram': 'month'}) }}">This month</a>
             </div>
         {% endfor %}
     </div>
@@ -36,6 +38,9 @@
     <div class="text-center">
         <a class="btn btn-link" href="{{ path('timelog') }}">Back to Timelogger overview</a>
     </div>
+    {% if(project is not empty) %}
+        {% set subheadline =  subheadline ~ ' for project '~project.name %}
+    {% endif %}
     <script>
         window.onload = function () {
 

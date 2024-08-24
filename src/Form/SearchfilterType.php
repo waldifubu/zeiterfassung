@@ -55,14 +55,15 @@ class SearchfilterType extends AbstractType
             ])
             ->add('hours', NumberType::class, [
                 'required' => false,
+                'attr' => ['class' => 'form-control'],
             ])
             ->add('submit', SubmitType::class, [
-                'label' => '<i class="fas fa-filter"> Filter</i>',
+                'label' => '<i class="fas fa-filter"></i> Filter',
                 'attr' => ['class' => 'btn btn-outline-success'],
                 'label_html' => true,
             ])
             ->add('download', SubmitType::class, [
-                'label' => '<i class="fas fa-download"> Download</i>',
+                'label' => '<i class="fas fa-download"></i> Download',
                 'attr' => ['class' => 'btn btn-outline-primary'],
                 'label_html' => true,
             ]);

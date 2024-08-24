@@ -10,6 +10,7 @@ use App\Repository\ProjectRepository;
 use App\Repository\TimelogRepository;
 use App\Service\MyDateInterval;
 use App\Twig\DateDifferenceExtension;
+use Carbon\CarbonInterval;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
@@ -17,7 +18,8 @@ use JetBrains\PhpStorm\NoReturn;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
+use Symfony\Component\Routing\Attribute\Route;
 
 class TimelogController extends AbstractController
 {
@@ -39,10 +41,11 @@ class TimelogController extends AbstractController
 
     #[Route('/create', name: 'timelog-create', methods: ['GET', 'POST'])]
     public function create(
-        Request $request,
-        ProjectRepository $projectRepository,
+        Request                $request,
+        ProjectRepository      $projectRepository,
         EntityManagerInterface $entityManager
-    ): Response {
+    ): Response
+    {
         // We need existing projects first
         $entries = $projectRepository->findAll();
 
@@ -130,12 +133,13 @@ class TimelogController extends AbstractController
             $mydateInterval->add($interval);
         }
 
-        return $mydateInterval->format("%d days\n%H h\n%I min.\n%S sec.");
+        return CarbonInterval::instance($mydateInterval)->forHumans();
     }
 
     /**
      * @param Timelog[] $timelogs
      */
+    #[NoReturn]
     private function downloadList(array $timelogs, string $sumTime): void
     {
         $dateDiffer = new DateDifferenceExtension();
@@ -168,7 +172,7 @@ class TimelogController extends AbstractController
             $sumTime,
         ];
 
-        $this->arrayToCsvDownload($csvList, 'timelog_'.date('YmdHis').'.csv');
+        $this->arrayToCsvDownload($csvList, 'timelog_' . date('YmdHis') . '.csv');
     }
 
     /**
@@ -183,9 +187,10 @@ class TimelogController extends AbstractController
         $array,
         $filename = "export.csv",
         $delimiter = ";"
-    ): void {
+    ): void
+    {
         header('Content-Type: application/csv');
-        header('Content-Disposition: attachment; filename="'.$filename.'";');
+        header('Content-Disposition: attachment; filename="' . $filename . '";');
 
         // open the "output" stream
         // see http://www.php.net/manual/en/wrappers.php.php#refsect2-wrappers.php-unknown-unknown-unknown-descriptioq
@@ -219,24 +224,28 @@ class TimelogController extends AbstractController
     /**
      * @throws Exception
      */
+    #[NoReturn]
     #[Route('/statistics', name: 'timelog_statistics', methods: ['GET', 'POST'])]
     public function statistics(
-        Request $request,
-        ProjectRepository $projectRepository
-    ): Response {
+        Request                                                 $request,
+        ProjectRepository                                       $projectRepository,
+        #[MapQueryParameter] ?string                            $diagram = null,
+        #[MapQueryParameter(filter: \FILTER_VALIDATE_INT)] ?int $projectId = null,
+    ): Response
+    {
         $calc = self::TODAY;
-        $project = null;
         $subheadline = '';
-        if ($request->query->has('diagram')) {
-            if ($request->query->get('diagram') === self::TODAY) {
+
+        if (null !== $diagram) {
+            if ($diagram === self::TODAY) {
                 $calc = self::TODAY;
                 $subheadline .= 'Results for today';
             }
-            if ($request->query->get('diagram') === self::WEEK) {
+            if ($diagram === self::WEEK) {
                 $calc = self::WEEK;
                 $subheadline .= 'Results for this week';
             }
-            if ($request->query->get('diagram') === self::MONTH) {
+            if ($diagram === self::MONTH) {
                 $calc = self::MONTH;
                 $subheadline .= 'Results for this month';
             }
@@ -245,11 +254,9 @@ class TimelogController extends AbstractController
             $subheadline .= 'Results for today';
         }
 
-        if ($request->query->has('project')) {
-            $projectId = $request->query->get('project');
-            /** @var Project $project */
-            $project = $projectRepository->findOneBy(['id' => $projectId]);
-            $subheadline .= ' for project '.$project->getName();
+        $project = null;
+        if ($projectId !== null) {
+            $project = $projectRepository->find($projectId);
         }
 
         $dataPoints = $this->calculateDiagram($calc, $project);
@@ -262,6 +269,7 @@ class TimelogController extends AbstractController
                 'dataPoints' => json_encode($dataPoints, JSON_THROW_ON_ERROR | JSON_NUMERIC_CHECK),
                 'projects' => $allProjects,
                 'subheadline' => $subheadline,
+                'project' => $project
             ]
         );
     }
@@ -279,8 +287,8 @@ class TimelogController extends AbstractController
         if ($calc === self::TODAY) {
             $minutes = 0;
             foreach (range(0, 23) as $hour) {
-                $startRange = new \DateTime($hour.':0');
-                $endRange = new \DateTime(($hour + 1).':0');
+                $startRange = new \DateTime($hour . ':0');
+                $endRange = new \DateTime(($hour + 1) . ':0');
                 $timelogs = $this->timelogRepository->findByRange($startRange, $endRange, $project);
 
                 $since_start = $this->calcWorkingInterval($timelogs);
@@ -288,7 +296,7 @@ class TimelogController extends AbstractController
                 $minutes += $since_start->days * 24 * 60;
                 $minutes += $since_start->h * 60;
                 $minutes += $since_start->i;
-                $dataPoints[] = ['y' => $minutes, 'label' => (string) $hour];
+                $dataPoints[] = ['y' => $minutes, 'label' => (string)$hour];
                 $minutes = 0;
             }
         }
@@ -358,11 +366,12 @@ class TimelogController extends AbstractController
 
     #[Route('/{id}', name: 'timelog-delete', methods: ['POST'])]
     public function deleteTimelog(
-        Request $request,
-        Timelog $timelog,
+        Request                $request,
+        Timelog                $timelog,
         EntityManagerInterface $entityManager
-    ): Response {
-        if ($this->isCsrfTokenValid('delete'.$timelog->getId(), $request->request->get('_token'))) {
+    ): Response
+    {
+        if ($this->isCsrfTokenValid('delete' . $timelog->getId(), $request->request->get('_token'))) {
             $entityManager->remove($timelog);
             $entityManager->flush();
         }
