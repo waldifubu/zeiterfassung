@@ -1,6 +1,8 @@
 {
+    "name": "waldifubu/zeiterfassung",
+    "description": "Nice demo tool to log working hours",
     "type": "project",
-    "license": "proprietary",
+    "license": "MIT",
     "require": {
         "php": ">=8.3",
         "ext-calendar": "*",

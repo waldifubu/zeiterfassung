@@ -9,13 +9,10 @@
 {% endblock %}
 
 {% block body %}
-    <style>
-
-    </style>
-
+    {{ parent() }}
     <div class="container">
 
-        <h1 class="display-1"><img loading="lazy" src="{{ asset('img/timelog.png') }}" style="width: 200px">
+        <h1 class="display-1"><img class="head-logo" loading="lazy" src="{{ asset('img/timelog.png') }}" style="width: 200px">
             Hello to Timelogger</h1>
 
         <div class="row">
@@ -90,7 +87,7 @@
                         <button class="btn btn-success start-timer-btn hidden" title="Start"><i class="fas fa-play"></i>
                         </button>
                         <button class="btn btn-success resume-timer-btn d-none">Resume</button>
-                        <button class="btn btn-outline-dark pause-timer-btn" title="Pause"><i class="fas fa-pause"></i>
+                        <button data-bs-theme="light"  class="btn btn-warning pause-timer-btn" title="Pause"><i class="fas fa-pause"></i>
                         </button>
                         <button class="btn btn-danger remove-timer-btn" title="Stop Timer"><i class="fas fa-stop"></i>
                         </button>
@@ -182,7 +179,7 @@
             }
 
             function buildLink() {
-                return '<a class=\'btn btn-outline-dark\' href=\'{{ path('timelog-create') }}' + '?startTime=' + startTime.getTime() + '&endTime=' + endTime.getTime() + '\'>Create new entry with this time</a>'
+                return '<a class=\'btn btn-link\' data-bs-theme-value=\'light\'  href=\'{{ path('timelog-create') }}' + '?startTime=' + startTime.getTime() + '&endTime=' + endTime.getTime() + '\'>Create new entry with this time</a>'
             }
         </script>
     </div>

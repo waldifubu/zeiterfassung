@@ -25,7 +25,7 @@ class TimelogType extends AbstractType
         $this->projectRepository = $projectRepository;
     }
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('start', DateTimeType::class, [
@@ -46,17 +46,16 @@ class TimelogType extends AbstractType
                 'label' => 'Project',
                 'class' => Project::class,
                 'choices' => $this->projectRepository->findAllProjectsAlphabetical(),
-                'choice_label' => function(Project $project) {
+                'choice_label' => function (Project $project) {
                     return sprintf('(%d) %s', $project->getId(), $project->getName());
                 },
                 'placeholder' => 'Please select a project',
                 'required' => true
             ])
-            ->add('save', SubmitType::class)
-        ;
+            ->add('save', SubmitType::class);
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => Timelog::class,

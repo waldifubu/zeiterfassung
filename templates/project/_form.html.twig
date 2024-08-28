@@ -8,6 +8,12 @@
     {{ form_widget(form.name, {'attr': {'class': 'form-control', 'placeholder' : 'projectname'}}) }}
 </div>
 
+<ul style="list-style: none">
+    {% for error in errors %}
+        <li><span class="text-danger">{{ error.message }}</span></li>
+    {% endfor %}
+</ul>
+
 <div class="mb-3">
     {{ form_widget(form.save, {'label': button_label, 'attr': {'class': 'btn btn-primary mb-3'}}) }}
 </div>

@@ -21,8 +21,8 @@ class Timelog
     #[ORM\Column(type: 'datetime')]
     private ?\DateTimeInterface $end;
 
-    #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    private ?string $comment;
+    #[ORM\Column(type: 'string', length: 255, nullable: true, options: ["default" => null])]
+    private ?string $comment = null;
 
     #[ORM\ManyToOne(targetEntity: Project::class, inversedBy: 'timelogs')]
     #[ORM\JoinColumn(nullable: false)]
@@ -31,8 +31,8 @@ class Timelog
     #[ORM\Column(type: 'datetime')]
     private ?\DateTimeInterface $created;
 
-    #[ORM\Column(type: 'datetime', nullable: true)]
-    private ?\DateTimeInterface $updated;
+    #[ORM\Column(type: 'datetime', nullable: true, options: ['default' => null])]
+    private ?\DateTimeInterface $updated = null;
 
     public function getId(): ?int
     {

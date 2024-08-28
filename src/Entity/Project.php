@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\ProjectRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
@@ -27,6 +28,12 @@ class Project
 
     #[ORM\OneToMany(mappedBy: 'project', targetEntity: Timelog::class, orphanRemoval: true)]
     private Collection $timelogs;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $slug = null;
+
+    #[ORM\Column(type: Types::BINARY, length: 16, nullable: true)]
+    private ?string $uuid = null;
 
     public function __construct()
     {
@@ -97,5 +104,29 @@ class Project
     public function onPrePersist(): void
     {
         $this->created = new \DateTime();
+    }
+
+    public function getSlug(): ?string
+    {
+        return $this->slug;
+    }
+
+    public function setSlug(?string $slug): static
+    {
+        $this->slug = $slug;
+
+        return $this;
+    }
+
+    public function getUuid(): ?string
+    {
+        return $this->uuid;
+    }
+
+    public function setUuid(?string $uuid): static
+    {
+        $this->uuid = $uuid;
+
+        return $this;
     }
 }

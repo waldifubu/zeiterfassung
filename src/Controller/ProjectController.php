@@ -28,6 +28,7 @@ class ProjectController extends AbstractController
         $project = new Project();
         $form = $this->createForm(ProjectType::class, $project);
         $form->handleRequest($request);
+        $errors = [];
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($project);
@@ -36,9 +37,14 @@ class ProjectController extends AbstractController
             return $this->redirectToRoute('project_index', [], Response::HTTP_SEE_OTHER);
         }
 
+        if($form->isSubmitted() && !$form->isValid() && !$form->get('name')->isValid()) {
+            $errors = $form->get('name')?->getErrors()?->getForm()?->getErrors();
+        }
+
         return $this->render('project/new.html.twig', [
             'project' => $project,
             'form' => $form->createView(),
+            'errors' => $errors
         ]);
     }
 

@@ -3,6 +3,7 @@
 {% block title %}Timelogs statistics{% endblock %}
 
 {% block javascripts %}
+    {{ parent() }}
     <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
 {% endblock %}
 
@@ -67,7 +68,6 @@
                 }]
             });
             chart.render();
-
         }
     </script>
 

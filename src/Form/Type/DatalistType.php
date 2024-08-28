@@ -15,7 +15,7 @@ class DatalistType extends AbstractType
         $resolver->setRequired(['choices']);
     }
 
-    public function buildView(FormView $view, FormInterface $form, array $options)
+    public function buildView(FormView $view, FormInterface $form, array $options): void
     {
         $view->vars['choices'] = $options['choices'];
     }
