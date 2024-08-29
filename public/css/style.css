@@ -2,38 +2,47 @@
     position: relative;
     cursor: pointer;
 }
-.sun, .moon{
+
+.sun, .moon {
     width: fit-content;
     height: fit-content;
 }
-.moon{
+
+.moon {
     position: absolute;
     inset: 0;
 }
-.moon-logo{
+
+.moon-logo {
     opacity: 0;
     transform: translateY(20%) rotateZ(50deg);
     transition: all 1s ease-out;
 }
-.sun-logo{
+
+.sun-logo {
     opacity: 1;
     transform: translateY(0) rotateZ(0deg);
     transition: all 1s ease-out;
 }
-.animate-sun{
+
+.animate-sun {
     opacity: 0;
     transform: translateY(20%) rotateZ(100deg);
 }
-.animate-moon{
+
+.animate-moon {
     opacity: 1;
     transform: translateY(0%) rotateZ(0deg);
 }
-.animate-moon path{
+
+.animate-moon path {
     fill: white;
 }
-.animate-sun path{
+
+.animate-sun path {
     fill: white;
 }
+
 .invert {
     filter: invert(1);
 }

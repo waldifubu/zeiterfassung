@@ -23,9 +23,9 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class TimelogController extends AbstractController
 {
-    public const TODAY = 'today';
-    public const WEEK = 'week';
-    public const MONTH = 'month';
+    public const string TODAY = 'today';
+    public const string WEEK = 'week';
+    public const string MONTH = 'month';
 
     public function __construct(private readonly TimelogRepository $timelogRepository)
     {
@@ -178,15 +178,15 @@ class TimelogController extends AbstractController
     /**
      * Method for downloading csv
      *
-     * @param $array
+     * @param $timelogs
      * @param string $filename
      * @param string $delimiter
      */
     #[NoReturn]
     private function arrayToCsvDownload(
-        $array,
-        $filename = "export.csv",
-        $delimiter = ";"
+        array  $timelogs,
+        string $filename = "export.csv",
+        string $delimiter = ";"
     ): void
     {
         header('Content-Type: application/csv');
@@ -196,7 +196,7 @@ class TimelogController extends AbstractController
         // see http://www.php.net/manual/en/wrappers.php.php#refsect2-wrappers.php-unknown-unknown-unknown-descriptioq
         $f = fopen('php://output', 'wb');
 
-        foreach ($array as $line) {
+        foreach ($timelogs as $line) {
             fputcsv($f, $line, $delimiter);
         }
         exit;
@@ -224,7 +224,6 @@ class TimelogController extends AbstractController
     /**
      * @throws Exception
      */
-    #[NoReturn]
     #[Route('/statistics', name: 'timelog_statistics', methods: ['GET', 'POST'])]
     public function statistics(
         Request                                                 $request,
@@ -284,25 +283,28 @@ class TimelogController extends AbstractController
     {
         $dataPoints = [];
 
-        if ($calc === self::TODAY) {
+        $calculatedMinutes = static function ($since_start) {
             $minutes = 0;
+            $minutes += $since_start->days * 24 * 60;
+            $minutes += $since_start->h * 60;
+            $minutes += $since_start->i;
+            return $minutes;
+        };
+
+        if ($calc === self::TODAY) {
             foreach (range(0, 23) as $hour) {
                 $startRange = new \DateTime($hour . ':0');
                 $endRange = new \DateTime(($hour + 1) . ':0');
                 $timelogs = $this->timelogRepository->findByRange($startRange, $endRange, $project);
 
                 $since_start = $this->calcWorkingInterval($timelogs);
+                $minutes = $calculatedMinutes($since_start);
 
-                $minutes += $since_start->days * 24 * 60;
-                $minutes += $since_start->h * 60;
-                $minutes += $since_start->i;
                 $dataPoints[] = ['y' => $minutes, 'label' => (string)$hour];
-                $minutes = 0;
             }
         }
 
         if ($calc === self::WEEK) {
-            $minutes = 0;
             $startRange = new DateTime('sunday last week 0:0');
 
             foreach (range(0, 6) as $day) {
@@ -313,16 +315,13 @@ class TimelogController extends AbstractController
                 $timelogs = $this->timelogRepository->findByRange($startRange, $endRange, $project);
 
                 $since_start = $this->calcWorkingInterval($timelogs);
-                $minutes += $since_start->days * 24 * 60;
-                $minutes += $since_start->h * 60;
-                $minutes += $since_start->i;
+                $minutes = $calculatedMinutes($since_start);
+
                 $dataPoints[] = ['y' => $minutes, 'label' => $startRange->format('l')];
-                $minutes = 0;
             }
         }
 
         if ($calc === self::MONTH) {
-            $minutes = 0;
             $startRange = new DateTime('first day of this month 0:0');
             $startRange->sub(new \DateInterval('P1D'));
 
@@ -336,11 +335,9 @@ class TimelogController extends AbstractController
                 $timelogs = $this->timelogRepository->findByRange($startRange, $endRange, $project);
 
                 $since_start = $this->calcWorkingInterval($timelogs);
-                $minutes += $since_start->days * 24 * 60;
-                $minutes += $since_start->h * 60;
-                $minutes += $since_start->i;
+                $minutes = $calculatedMinutes($since_start);
+
                 $dataPoints[] = ['y' => $minutes, 'label' => $day];
-                $minutes = 0;
             }
         }
 

@@ -12,7 +12,8 @@
     {{ parent() }}
     <div class="container">
 
-        <h1 class="display-1"><img class="head-logo" loading="lazy" src="{{ asset('img/timelog.png') }}" style="width: 200px">
+        <h1 class="display-1"><img class="head-logo" loading="lazy" src="{{ asset('img/timelog.png') }}"
+                                   style="width: 200px" alt="logo">
             Hello to Timelogger</h1>
 
         <div class="row">
@@ -22,7 +23,7 @@
                     <div class="card-body">
                         <h5 class="card-title">Create new timelog</h5>
                         <p class="card-text">for create new entries</p>
-                        <a href="{{ path('timelog-create') }}" class="btn btn-success">NEW  <i
+                        <a href="{{ path('timelog-create') }}" class="btn btn-success">NEW <i
                                     class="fas fa-arrow-right"></i></a>
                     </div>
                 </div>
@@ -71,11 +72,13 @@
                 <div class="row">
                     <div class="col-md-2">
                         <label for="start-time">Start time:</label>
-                        <input type="text" id="start-time" class="form-control" readonly="readonly" style="background-color: transparent">
+                        <input type="text" id="start-time" class="form-control" readonly="readonly"
+                               style="background-color: transparent">
                     </div>
                     <div class="col-md-2">
                         <label for="end-time">End time:</label>
-                        <input type="text" id="end-time" class="form-control" readonly="readonly" style="background-color: transparent">
+                        <input type="text" id="end-time" class="form-control" readonly="readonly"
+                               style="background-color: transparent">
                     </div>
                     <div class="col-md-2">
                         <br><label>
@@ -87,7 +90,8 @@
                         <button class="btn btn-success start-timer-btn hidden" title="Start"><i class="fas fa-play"></i>
                         </button>
                         <button class="btn btn-success resume-timer-btn d-none">Resume</button>
-                        <button data-bs-theme="light"  class="btn btn-warning pause-timer-btn" title="Pause"><i class="fas fa-pause"></i>
+                        <button data-bs-theme="light" class="btn btn-warning pause-timer-btn" title="Pause"><i
+                                    class="fas fa-pause"></i>
                         </button>
                         <button class="btn btn-danger remove-timer-btn" title="Stop Timer"><i class="fas fa-stop"></i>
                         </button>

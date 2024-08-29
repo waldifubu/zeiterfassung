@@ -13,7 +13,7 @@
         "composer/package-versions-deprecated": "^1.11.99.5",
         "doctrine/doctrine-bundle": "^2.12.0",
         "doctrine/doctrine-migrations-bundle": "^3.3.1",
-        "doctrine/orm": "^3.2.1",
+        "doctrine/orm": "^3.2.2",
         "phpdocumentor/reflection-docblock": "^5.4.1",
         "symfony/asset": "7.1.*",
         "symfony/console": "7.1.*",
@@ -38,8 +38,8 @@
         "symfony/validator": "7.1.*",
         "symfony/web-link": "7.1.*",
         "symfony/yaml": "7.1.*",
-        "twig/extra-bundle": "^2.12|^3.11",
-        "twig/twig": "^2.12|^3.11",
+        "twig/extra-bundle": "^2.12|^3.12",
+        "twig/twig": "^2.12|^3.12",
         "nesbot/carbon": "^3.8.0"
     },
     "require-dev": {
@@ -93,6 +93,9 @@
         ],
         "post-update-cmd": [
             "@auto-scripts"
+        ],
+        "version": [
+            "@composer --version"
         ]
     },
     "conflict": {

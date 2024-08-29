@@ -44,10 +44,11 @@
     {% endif %}
     <script>
         window.onload = function () {
+            const themePrefix = document.querySelector('html').getAttribute('data-bs-theme');
 
             const chart = new CanvasJS.Chart("chartContainer", {
                 animationEnabled: true,
-                theme: "light2",
+                theme: themePrefix+"2",
                 title: {
                     text: "Working time analysis"
                 },
