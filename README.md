@@ -46,3 +46,6 @@ Left to right:
 
 At the bottom is the automatic stopwatch which tracks work times. If work is paused you can also click
 on the pause button to stop tracking. And afterwards resuming is also available, like a usual stopwatch 
+
+With darmode enabled, it looks like this:
+![Preview](preview-dark.png "Homescreen")

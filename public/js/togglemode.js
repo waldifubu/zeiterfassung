@@ -1,4 +1,5 @@
-if (sessionStorage.getItem('darkMode') !== undefined && sessionStorage.getItem('darkMode') === 'true') {
+if ((sessionStorage.getItem('darkMode') !== null && sessionStorage.getItem('darkMode') === 'true')
+|| (sessionStorage.getItem('darkMode') === null && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
     toggle('light')
 }
 
